@@ -1,9 +1,12 @@
 #include <bits/stdc++.h>
 #include <pthread.h>
-
+#include <mutex>
 using namespace std;
+ 
 #define N_ARR 10
 #define N_THREADS 5
+
+mutex m; 
 
 int arr1[N_ARR];
 int final_sum = 0;  
@@ -28,8 +31,11 @@ void *f(void *arg){
     }
 
     // mutex
+    m.lock();
     final_sum += local;
-    printf("Done thread %d between %d and %d\n", t.thread_num, t.s, t.e); 
+    m.unlock(); 
+    
+    printf("Done thread %d between %d and %d\n", t.thread_num, t.s, t.e);
 }
 
 int main()
