@@ -4,7 +4,7 @@
 using namespace std;
  
 #define N_ARR 10
-#define N_THREADS 5
+#define N_THREADS 4
 
 mutex m; 
 
@@ -34,7 +34,7 @@ void *f(void *arg){
     m.lock();
     final_sum += local;
     m.unlock(); 
-    
+
     printf("Done thread %d between %d and %d\n", t.thread_num, t.s, t.e);
 }
 
