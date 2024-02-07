@@ -1,11 +1,12 @@
 #include <bits/stdc++.h>
 #include <omp.h>
 using namespace std;
-#define rep                        \
+#define rep                               \
     for (long i = 0; i < 1000000000; i++) \
-    {                              \
+    {                                     \
     }
-#define N 2*8192
+#define N 65536
+#define NUM_THREADS 4
 
 int main()
 {
@@ -13,8 +14,8 @@ int main()
     vector<long long> v(N);
     for (int i = 0; i < N; i++)
     {
-        v[i] = rand() % N;
-        // v[i] = 1;
+        // v[i] = rand() % N;
+        v[i] = 1;
     }
     // for (int x : v)
     //     cout << x << ' ';
@@ -34,21 +35,18 @@ int main()
         int offset = N / pow(2, i);
         // cout << "N IS " << N << " AND STEPS IS " << steps << endl;
         // cout << "OFFSET IS " << offset << endl;
-        // cout << total_threads << endl; 
-#pragma omp parallel num_threads(total_threads) shared(offset) 
+        // cout << total_threads << endl;
+#pragma omp parallel num_threads(NUM_THREADS) shared(offset)
         {
-            int tid = omp_get_thread_num();
-            // rep;
-            int j = tid + offset;
-            ans[j] = ans[2 * j + 1] + ans[2 * j];
+            int s = offset, e = offset + total_threads; 
+            #pragma omp for
+            for (int i = s; i < e; i++){
+                ans[i] = ans[2 * i] + ans[2 * i + 1]; 
+            }
         }
+
     }
-
-    // for (int x : ans)
-    //     cout << x << ' ';
-    // cout << endl;
-
-    cout << ans[1] << endl; 
+    cout << ans[1] << endl;
 
     return 0;
 }

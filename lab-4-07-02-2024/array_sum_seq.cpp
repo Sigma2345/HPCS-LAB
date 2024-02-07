@@ -1,6 +1,6 @@
 #include<bits/stdc++.h>
-using namespace std; 
-#define N 2*8192
+using namespace std;
+#define N 65536
 
 int main(){
 
