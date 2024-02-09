@@ -5,7 +5,7 @@ using namespace std;
     for (long i = 0; i < 1000000000; i++) \
     {                                     \
     }
-#define N 65536
+#define N 1024 * 65536
 #define NUM_THREADS 4
 
 int main()
@@ -36,15 +36,11 @@ int main()
         // cout << "N IS " << N << " AND STEPS IS " << steps << endl;
         // cout << "OFFSET IS " << offset << endl;
         // cout << total_threads << endl;
-#pragma omp parallel num_threads(NUM_THREADS) shared(offset)
-        {
-            int s = offset, e = offset + total_threads; 
-            #pragma omp for
-            for (int i = s; i < e; i++){
-                ans[i] = ans[2 * i] + ans[2 * i + 1]; 
-            }
+        int s = offset, e = offset + total_threads;
+#pragma omp parallel for num_threads(NUM_THREADS) shared(offset, s, e) 
+        for (int i = s; i < e; i++){
+            ans[i] = ans[2 * i] + ans[2 * i + 1]; 
         }
-
     }
     cout << ans[1] << endl;
 
