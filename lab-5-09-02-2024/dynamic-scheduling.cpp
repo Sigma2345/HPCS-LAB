@@ -19,7 +19,7 @@ int main()
 
     #pragma omp parallel shared(a, N) private(j) num_threads(NUM_THREADS)
         {
-    #pragma omp for schedule(static)
+    #pragma omp for schedule(dynamic)
             for (int i = 0; i < N; i++)
         {
             for (int j = i; j < N; j++){
