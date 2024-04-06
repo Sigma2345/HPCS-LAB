@@ -37,7 +37,6 @@ int main()
         }
     }
 
-    cout << "rank of element " << x << " is " << ans[1] << endl;
-
+    cout << "rank of element is " << ans[1]+1 << endl;
     return 0;
 }
