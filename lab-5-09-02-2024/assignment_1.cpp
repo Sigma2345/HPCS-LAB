@@ -2,7 +2,7 @@
 #include <omp.h>
 using namespace std;
 #define NUM_THREADS 4
-#define NUM_ELEMENTS 1024 * 65536
+#define NUM_ELEMENTS 1024
 
 int main()
 {
@@ -27,10 +27,10 @@ int main()
     int steps = int(log2(NUM_ELEMENTS)) + 1;
     for (int i = 1; i <= steps; i++)
     {
-        int total_threads = (long long)(NUM_ELEMENTS / (pow(2, i)));
-        int offset = NUM_ELEMENTS / pow(2, i);
+        int total_threads = (long long)(NUM_ELEMENTS / (1<<i));
+        int offset = NUM_ELEMENTS / (1<<i);
         int s = offset, e = offset + total_threads;
-#pragma omp parallel for num_threads(NUM_THREADS) shared(offset, s, e)
+#pragma omp parallel for num_threads(NUM_THREADS) shared(offset, s, e) schedule(static)
         for (int i = s; i < e; i++)
         {
             ans[i] = ans[2 * i] + ans[2 * i + 1];
