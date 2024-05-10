@@ -2,6 +2,7 @@
 #include<omp.h>
 using namespace std; 
 #define NUM_THREADS 4
+#define N 10
 
 class Node{
 public:
@@ -49,7 +50,7 @@ Node* contain(Node* sup_head, int val){
 void remove(Node* sup_head, int val){
     #pragma omp critical 
     {
-        cout<<"Inserting "<<val<<" by thread "<<omp_get_thread_num()<<endl ;
+        cout<<"Deleting "<<val<<" by thread "<<omp_get_thread_num()<<endl ;
     }
     Node*n = new Node(val); 
     Node* h = contain(sup_head, val);  
@@ -118,17 +119,18 @@ int main(){
     Node* sup_head = new Node(-1), *sup_tail = new Node(-1); 
     sup_head->next = sup_tail; 
 
-    int arr[] = {1, 5, 2, 3}; 
+    int arr[N][2] = {{1,1}, {2,1}, {3, 1}, {1, -1}, {3, -1}, {5, 1}, {4, -1}, {6, 1}, {2, -1}, {7, 1}};
+
     #pragma omp parallel for
-    for(int i = 0 ; i<4 ; i++){
-        insert(sup_head, arr[i]); 
+    for(int i = 0;  i<N ; i++){
+        if(arr[i][1] == 1){
+            insert(sup_head, arr[i][0]); 
+        }
+        else{
+            remove(sup_head, arr[i][0]); 
+        }
     }
-    int arr1[] = {1,4,3,2}; 
-    #pragma omp parallel for
-    for(int i = 0 ; i<4 ; i++){
-        remove(sup_head, arr1[i]); 
-    }
-    // print(sup_head); 
+    
 
     return 0; 
 }

@@ -2,7 +2,7 @@
 #include<omp.h>
 using namespace std ;
 #define NUM_THREADS 10
-#define LEVEL 4
+#define LEVEL 2
 
 class TreeNode{
   
@@ -37,7 +37,7 @@ TreeNode* construct_tree(TreeNode* t,int level){
 
 void print_tree(TreeNode* t){
   if(!t) return;
-  // cout<<t->val<<' '; 
+  cout<<t->val<<' '; 
   print_tree(t->left); 
   print_tree(t->right); 
 }
@@ -46,20 +46,20 @@ void traverse(TreeNode* root){
   
   if(root == NULL) return; 
 
-#pragma omp task untied
+#pragma omp task  untied
 {
   traverse(root->left); 
 }
-#pragma omp task untied // iterations assigned to threads dynamically
+#pragma omp task untied
 {
   traverse(root->right); 
 }
 #pragma omp taskwait 
 
-  // #pragma omp critical
-  // {
-  //   cout<<"("<<root->val<<","<<omp_get_thread_num()<<")"<<' '; 
-  // }
+  #pragma omp critical
+  {
+    cout<<"("<<root->val<<","<<omp_get_thread_num()<<")"<<' '; 
+  }
 }
 
 
@@ -78,9 +78,11 @@ int main(){
   cout<<"----------------- PARALLEL TRAVERSAL --------------------------"<<endl ;
   double s2 = omp_get_wtime(); 
 #pragma omp parallel 
-#pragma omp single
-  cout<<"EXECUTING THREAD: "<<omp_get_thread_num()<<"/"<<omp_get_num_threads()<<endl; 
-  traverse(root); 
+{
+  #pragma omp single
+    // cout<<"EXECUTING THREAD: "<<omp_get_thread_num()<<"/"<<omp_get_num_threads()<<endl; 
+    traverse(root); 
+}
 // #pragma omp taskwait
   double e2 = omp_get_wtime(); 
 
